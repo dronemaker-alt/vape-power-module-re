@@ -21,6 +21,8 @@ Reverse engineering of a USB-C rechargeable disposable vape power module based o
 ## Repository roadmap
 
 - docs/
+  - [hardware overview](docs/hardware-overview.md)
+  - [reuse concepts](docs/concepts/README.md), including the [MÍTILL modular avionics backpack](docs/concepts/mitill-backpack.md)
 - photos/
 - hardware/
 - firmware/
