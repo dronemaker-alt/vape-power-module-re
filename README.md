@@ -1,32 +1,25 @@
 # vape-power-module-re
 
-Reverse engineering of a USB-C rechargeable disposable vape power module based on the Injoinic IP5305 power management IC and Padauk PFS123 microcontroller.
+Reverse engineering of a USB-C rechargeable disposable vape power module built around an Injoinic IP5305 power-management IC, a Padauk PFS123 MCU, a single-cell Li-ion battery, and a small display.
 
-## Goals
+## Documentation
 
-- Document the hardware and PCB.
-- Identify all components and signals.
-- Reverse engineer the firmware and communication.
-- Publish measurements, logic analyzer captures, and oscilloscope traces.
-- Explore reuse of the module in embedded and robotics projects.
+- **[Hardware overview](docs/hardware-overview.md)** — stable module summary and entry point.
+- **[Power system](../../issues/6)** — charging, regulation, load, efficiency, and protection test plan.
+- **[Display](docs/display.md)** — interface identification and logic-analyzer checklist.
+- **[Pinout](../../issues/8)** — battery, USB-C, display, MCU, and test-pad signal map.
+- **[Board revisions](../../issues/3)** — revision comparison record.
+- **[Reference board](../../issues/9)** — Module-01 baseline and comparison conventions.
+- **[Reverse-engineering log](../../issues/4)** — chronological observations, measurements, and test results.
+- **[Reuse concepts](docs/concepts/README.md)** — applications built around recovered modules.
+  - **[MÍTILL avionics backpack](docs/concepts/mitill-backpack.md)** — self-powered GNSS, IMU, logging, and telemetry payload.
 
-## Hardware identified
+## Repository areas
 
-- Injoinic IP5305 power management IC
-- Padauk PFS123 MCU
-- USB-C charging
-- Single-cell Li-ion battery
-- Segmented OLED display
+- `photos/` — board and teardown images
+- `hardware/` — schematics, layouts, and physical notes
+- `firmware/` — MCU and protocol work
+- `logic-analyzer/` — captures and decoder notes
+- `datasheets/` — component references
 
-## Repository roadmap
-
-- docs/
-  - [hardware overview](docs/hardware-overview.md)
-  - [reuse concepts](docs/concepts/README.md), including the [MÍTILL modular avionics backpack](docs/concepts/mitill-backpack.md)
-- photos/
-- hardware/
-- firmware/
-- logic-analyzer/
-- datasheets/
-
-Contributions, measurements, and independent findings are welcome.
+Confirmed findings belong in the documentation; raw observations and evolving hypotheses belong in the reverse-engineering log.
