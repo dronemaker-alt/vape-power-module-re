@@ -43,3 +43,5 @@ Promote an unknown to a confirmed fact only when supported on Module-01 by a rec
 - [Reference board](reference-board.md)
 - [Board revisions](board-revisions.md)
 - [Display investigation](display.md)
+- [Power-characterization bench run sheet](power-characterization-run-sheet.md)
+- [Power-characterization results](power-characterization-results.md)
