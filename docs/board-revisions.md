@@ -1,43 +1,35 @@
-# Board Revisions
+# Module-01 Reference Board
 
-Module-01 is the reference anchor. Claim a revision only from a visible marking, measurement, trace, or repeatable behavior. Keep photo-confirmed facts separate from previous records and inference.
+Module-01 is the photo-evidence anchor for board-revision comparisons. This page records only details visible in the cleaned photographs. A marking, electrical identity, or behavior not established by those photographs remains **unknown** here.
 
-## Revision table
+## Revision record
 
-| Board ID | Identifying evidence | PCB / display | IC markings | Pads / connectors | Battery | Behavior | Status |
-|---|---|---|---|---|---|---|---|
-| Module-01 | Photo-confirmed vertical PCB marking `20250617` | Photo-confirmed elongated black PCB; display and controls on component side; rear insulating strip, display interconnect, battery pads, U3 area, and three lower contacts. Custom segmented display geometry is visible; technology, part number, and interface **unknown**. | PFS123 MCU and IP5305 PMIC were previously recorded in issue #9, but neither package marking is independently confirmed by these photos. Exact U2/U3 identities and assignment remain **unknown from this photo set**. | Photo-confirmed `J1`, `KEY`, `DATA`, `GND`, `VIN`, `B+`, `B-`, `TP-B+`, and `TP-B-`. Unlabeled contact functions remain **unknown**. | Photo-confirmed pouch cell and red/black wiring. Label, manufacturer, chemistry marking, voltage, and capacity remain **unknown from photos**; 850 mAh is a previous record only. | Working and USB-C charging were previously observed; other firmware behavior is **unknown / untested here**. | Reference anchor. Layout and listed silkscreen are photo-confirmed; other identities require their non-photo source or new bench evidence. |
+| Board ID | Photo-backed identification | Visible construction | Visible labels and contacts | Explicit unknowns | Status |
+|---|---|---|---|---|---|
+| Module-01 | Vertical PCB marking `20250617` | Elongated black PCB; segmented display and pushbutton on the component side; display interconnect, insulating strip, pouch cell, and red/black battery wiring on the rear | `J1`, `KEY`, `U2`, `U3`, `DATA`, `GND`, `VIN`, `B+`, `B-`, `TP-B+`, and `TP-B-`; three unlabeled lower spring/contact pins | Display part number, technology, pinout, and protocol; complete U2/U3 package markings and electrical identities; battery label, chemistry, voltage, and capacity; detached connector destination; functions of the three unlabeled contact pins | Reference anchor; no second photo-confirmed revision recorded |
 
-## Photo evidence
+Do not assign a new revision from general appearance alone. Require a legible marking, physical layout difference, trace, measurement, or repeatable behavior, and cite its evidence separately.
 
-Cleaned derivatives were added in [commit `43b4d00`](https://github.com/dronemaker-alt/vape-power-module-re/commit/43b4d00fdd2bff4815b02ac8cbb1b73a30469b80). Cleanup does not make an unreadable marking known.
+## Photo index
 
-| View | Photo | Photo-confirmed evidence | Unknown / not shown |
+The cleaned images preserve the photographed board, markings, wiring, and solder joints. Image cleanup does not make an unreadable marking known.
+
+| View | Clean image | Visible evidence | Not established by this image |
 |---|---|---|---|
-| Component/display side | [front](../photos/module-01-pcb-front-clean.jpg) | Display geometry; pushbutton and `KEY`; `U2` designator; USB-C `J1`; `DATA`, `GND`, `VIN`; `20250617`; surrounding designators | Complete U2 marking; display part number, technology, protocol |
-| Rear/battery side | [rear](../photos/module-01-pcb-rear-clean.jpg) | Display interconnect; insulating strip; `TP-B+`, `TP-B-`, `B+`, `B-`; U3 area; three lower contacts; pouch cell and wiring | U3 marking; battery label/rating; contact functions |
-| Rear U3/battery detail | [detail](../photos/module-01-pcb-rear-detail-clean.jpg) | U3 area/designator; `B-`; `TP-B-`; nearby passives; pouch cell; detached two-wire connector | Exact U3 marking; battery label/rating; connector destination |
-| Assembled module | Not captured | — | Enclosure markings, orientation, external revision labels |
-| IC macros | Not captured | — | Independent confirmation of remaining IC markings |
-| Battery-label macro | Not captured | — | Manufacturer, chemistry marking, nominal voltage, capacity |
+| Component and display side | [module-01-pcb-front-clean.jpg](../photos/module-01-pcb-front-clean.jpg) | Display geometry; pushbutton and `KEY`; `U2` designator; USB-C `J1`; `DATA`, `GND`, `VIN`; `20250617`; nearby designators | Complete U2 top marking; display part number, technology, pinout, or protocol |
+| Rear and battery side | [module-01-pcb-rear-clean.jpg](../photos/module-01-pcb-rear-clean.jpg) | Display interconnect; insulating strip; `TP-B+`, `TP-B-`, `B+`, `B-`; U3 area; three unlabeled lower contacts; pouch cell and wiring | Complete U3 top marking; battery label or rating; functions of the unlabeled contact pins |
+| Rear U3 and battery detail | [module-01-pcb-rear-detail-clean.jpg](../photos/module-01-pcb-rear-detail-clean.jpg) | `U3` designator and surrounding area; `B-`; `TP-B-`; nearby passives; pouch cell; detached two-wire connector | Complete U3 top marking; battery label or rating; connector destination |
 
-## Copy-ready comparison note
+## Evidence gaps
 
-```markdown
-### Module-XX compared with Module-01
+The current photo set does not include:
 
-| Item | Module-01 baseline | Module-XX evidence | Confirmed difference? | Source |
-|---|---|---|---|---|
-| PCB marking | `20250617` | unknown | unknown | photo/log link |
-| Layout / display | See Module-01 photo index; display interface unknown | unknown | unknown | |
-| Readable IC markings | unknown from current macro coverage | unknown | unknown | |
-| Labeled pads / connectors | J1, KEY, DATA, GND, VIN, B+, B-, TP-B+, TP-B- | unknown | unknown | |
-| Battery label / rating | unknown from photos | unknown | unknown | |
-| Firmware behavior | Working and USB-C charging previously observed | unknown | unknown | |
+- an assembled-module view showing enclosure markings or orientation;
+- legible macro photographs of the U2 and U3 package markings;
+- a legible battery-label macro;
+- trace, measurement, or capture evidence for the display protocol;
+- trace or measurement evidence for the three unlabeled lower contact pins.
 
-**Revision decision:** unknown / same observable revision / confirmed new revision
-**Confidence:** low / medium / high
-**Notes:** Record facts first; keep inference separate.
-```
+Until that evidence exists, the display protocol and unlabeled contact-pin functions remain explicitly **unknown**.
 
-Sources: [issue #3](https://github.com/dronemaker-alt/vape-power-module-re/issues/3), [issue #9](https://github.com/dronemaker-alt/vape-power-module-re/issues/9), and [Reference Board](reference-board.md).
+Sources: [issue #3](https://github.com/dronemaker-alt/vape-power-module-re/issues/3) and [issue #9](https://github.com/dronemaker-alt/vape-power-module-re/issues/9).
