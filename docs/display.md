@@ -1,21 +1,46 @@
-# Display Investigation Checklist
+# Module-01 Display Connector and Protocol Capture
 
 ## Objective
 
-Identify the display electrical interface, capture a repeatable power-up and animation transaction, and preserve enough physical and timing detail to compare later module revisions.
+Number the photographed Module-01 display interconnect, separate likely supply and communication conductors from unresolved pins, and obtain the smallest capture that can distinguish a serial protocol from direct segment drive.
 
 ## Current Knowledge
 
 | Item | Status | Notes |
 | --- | --- | --- |
 | Display present | Confirmed | Small display attached to the main PCB |
-| Flex connection | Confirmed | Treat exposed flex contacts as fragile probe points |
-| Display technology | Likely segmented OLED | Confirm by inspecting the unpowered panel and flex routing |
+| Display interconnect | Confirmed | Eight soldered conductors are visible in the rear photograph |
+| Display technology | Unknown | The photographs show a custom segmented display assembly, but not its electrical technology |
 | MCU controlled | Suspected | Verify by correlating display activity with MCU-side signals |
 | Orientation and segment map | Unknown | Photograph before removal or continuity testing |
 | Controller location | Unknown | May be on the panel/flex or implemented by the main MCU |
 
-Do not assume that every flex conductor is digital. A bare segmented OLED may expose common/segment drive lines with alternating waveforms rather than a conventional data bus.
+The photographs confirm the conductor count and location only. They do not establish pin functions, supply voltage, protocol, controller location, or even that every conductor is digital. A bare segmented display may expose common/segment drive lines rather than a conventional data bus.
+
+## Connector Reference and Evidence Boundary
+
+Use the rear/battery-side photograph with the PCB upright (`TP-B+` toward the top and the three spring contacts toward the bottom). Number the eight display solder joints from top to bottom as **DISP-1** through **DISP-8**. This is a project measurement reference, not a claim about the display manufacturer's pin numbering.
+
+| Project pin | Photo-backed identification | Likely class before measurement | Status / confirming test |
+| ---: | --- | --- | --- |
+| DISP-1 | Top solder joint in the eight-conductor row | Power, data, control, or direct drive | Unknown; continuity and powered waveform required |
+| DISP-2 | Second joint from top | Power, data, control, or direct drive | Unknown; continuity and powered waveform required |
+| DISP-3 | Third joint from top | Power, data, control, or direct drive | Unknown; continuity and powered waveform required |
+| DISP-4 | Fourth joint from top | Power, data, control, or direct drive | Unknown; continuity and powered waveform required |
+| DISP-5 | Fifth joint from top | Power, data, control, or direct drive | Unknown; continuity and powered waveform required |
+| DISP-6 | Sixth joint from top | Power, data, control, or direct drive | Unknown; continuity and powered waveform required |
+| DISP-7 | Seventh joint from top | Power, data, control, or direct drive | Unknown; continuity and powered waveform required |
+| DISP-8 | Bottom solder joint in the eight-conductor row | Power, data, control, or direct drive | Unknown; continuity and powered waveform required |
+
+Do not identify any DISP pin with the separately labeled `DATA`, `GND`, or `VIN` pads near USB-C. The photographs show those labels but do not show electrical continuity between those pads and the display connector.
+
+### Sorting power from signals
+
+1. With battery and USB disconnected, continuity to confirmed `B-`/USB-C ground makes a pin the **ground candidate**. Record resistance rather than promoting it from a photograph.
+2. Power normally and measure all eight pins with a DMM or scope. A stable DC level that appears whenever the display is enabled is a **supply candidate**; verify against a nearby decoupling capacitor or regulator output. Any voltage above the analyzer input rating remains scope-only.
+3. Pins that toggle in bursts at wake are **serial data/control candidates**. Two idle-high, open-drain-looking lines suggest I²C; clock plus data plus a framing line suggests SPI or custom synchronous serial.
+4. Pins with continuous periodic, multi-level, alternating, or phase-related waveforms are **direct COM/SEG candidates**, not ordinary logic-analyzer inputs until their voltage range is known.
+5. A static pin that changes only at wake may be reset, enable, data/command, chip-select, or a bias node. Leave it unknown until timing or continuity distinguishes it.
 
 ## Bus-Type Priority
 
@@ -53,14 +78,16 @@ Investigate in this order:
 
 ### Pin Survey
 
-| Flex pin | PCB/test point | Resistance to GND | Unpowered trace destination | Initial hypothesis | Confidence |
+| Project pin | PCB/test point | Resistance to GND | Unpowered trace destination | Initial hypothesis | Confidence |
 | ---: | --- | ---: | --- | --- | --- |
-| 1 |  |  |  |  | Unknown |
-| 2 |  |  |  |  | Unknown |
-| 3 |  |  |  |  | Unknown |
-| 4 |  |  |  |  | Unknown |
-
-Add rows until every conductor is represented.
+| DISP-1 |  |  |  |  | Unknown |
+| DISP-2 |  |  |  |  | Unknown |
+| DISP-3 |  |  |  |  | Unknown |
+| DISP-4 |  |  |  |  | Unknown |
+| DISP-5 |  |  |  |  | Unknown |
+| DISP-6 |  |  |  |  | Unknown |
+| DISP-7 |  |  |  |  | Unknown |
+| DISP-8 |  |  |  |  | Unknown |
 
 ## Phase 2 — First Powered Probes
 
@@ -91,6 +118,29 @@ Begin with an oscilloscope or logic analyzer in analog-capable mode. Observe fir
 | High-voltage or bipolar waveform | OLED segment/common or charge-pump node | Use a suitable scope probe; do not connect a low-voltage analyzer directly |
 
 ## Phase 3 — Logic-Analyzer Captures
+
+### Minimum decisive capture
+
+After the voltage survey proves every candidate is safe for the analyzer, connect all non-power DISP pins simultaneously, plus the analyzer ground at confirmed `B-`/USB-C ground. Capture one normal wake from a fully dark display:
+
+- **Channels:** every voltage-safe, non-power DISP pin; retain physical names `DISP-n`.
+- **Rate:** 10 MS/s minimum; use 24 MS/s if available.
+- **Window:** about 100 ms before the wake stimulus through at least 2 s after the first visible update.
+- **Trigger:** the first edge on any active DISP pin; if the analyzer cannot OR-trigger, arm it first and wake the module manually.
+- **Save:** raw undecoded data first, plus a short video showing the display during the same event.
+- **Repeat:** perform the identical wake once more only if the first trace is usable.
+
+That single capture confirms the protocol class when it shows one of these signatures:
+
+| Captured signature | Conclusion |
+| --- | --- |
+| Two idle-high lines with START/STOP, ACKs, and eight-bit transfers | I²C confirmed; record address and clock rate |
+| Clocked data with a framing/chip-select line and consistent words | SPI-like/custom synchronous serial confirmed; test SPI modes 0–3 |
+| Clock and data but non-SPI framing | Custom synchronous serial; record edge, word length, and gaps |
+| Several phase-related lines active continuously, without command bursts | Direct segment/common drive; repeat with an oscilloscope for voltage and phase |
+| No connector activity despite a visible change | Capture setup/pin access is incomplete, or the display/controller interconnect is not being observed at the correct point |
+
+This is the smallest proof needed to classify the interface. Cold-start initialization, sleep, charging, segment mapping, and decoder refinement are follow-on captures, not prerequisites for the first protocol decision.
 
 ### Capture Settings
 
@@ -208,28 +258,3 @@ Use filenames that sort and compare cleanly:
 `YYYY-MM-DD_<module-id>_<pcb-rev>_<capture-id>_<event>_<sample-rate>.<ext>`
 
 Example:
-
-`2026-07-31_Module-01_Rev-A_CAP-01_cold-boot_24MHz.sal`
-
-## Comparison Rules
-
-- Use the same module orientation, flex-pin numbering, ground point, stimulus, channel order, and capture IDs for every revision.
-- Keep raw captures immutable; save decoder experiments as copies or session metadata.
-- Record unknowns explicitly rather than carrying an old guess forward.
-- Mark a signal **Confirmed** only when supported by continuity/trace evidence plus a matching waveform or repeatable functional correlation.
-- Mark a signal **Probable** when the protocol decode and electrical behavior agree but the trace destination is not confirmed.
-- Mark a signal **Tentative** when based on waveform resemblance alone.
-- When comparing revisions, list changed pinout, voltage, timing, initialization, address/command, and segment-mapping behavior.
-
-## Completion Criteria
-
-The display investigation is ready for a driver or emulator attempt when:
-
-- [ ] Every flex conductor has a physical pin number.
-- [ ] Power, ground, and any elevated-voltage pins are identified.
-- [ ] The interface type and logic levels are confirmed or narrowed to one testable hypothesis.
-- [ ] Cold-start initialization and a full animation cycle have repeatable raw captures.
-- [ ] Timing, framing, bit order, and control-line polarity are documented.
-- [ ] At least one visible segment or icon is correlated with captured data or drive lines.
-- [ ] Capture files, photographs, channel maps, decoder settings, and confidence levels are recorded.
-- [ ] Remaining unknowns are listed as specific next experiments.
